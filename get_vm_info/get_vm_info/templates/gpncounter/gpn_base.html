@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+
+    <title>GPN 计算器</title>
+</head>
+
+<style>
+    #p1 {
+        text-align: right;
+    }
+
+    #p2 {
+        text-align: left;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <form role="form" class="form-inline">
+            <div class="dropdown">
+                <label> 源地址:</label>
+                <select name="src" id="src" class="dropdown-select">
+                {% for src in src_name %}<
+                <option value={{ src }}>{{ src }}</option>
+                {% endfor %}
+                </select>
+                <label> 目的地址:</label>
+                <select name="dest" id="dest" class="dropdown-select">  
+            {% for dest in dest_name %}  
+            <option value={{ dest }}>{{ dest }}</option>  
+            {% endfor %}    
+            </select>
+                <button type="button" class="btn btn-primary btn-sm">
+                计算最短路径
+            </button>
+        </form>
+        </div>
+        {% block counter %} {% endblock %}
+    </div>
+    <div>
+        最短路径:
+        <p id="s_path"> </p>
+        最短路径长度:
+        <p id="s_length"> </p>
+    </div>
+    <table class='table-bordered table-hover table-condensed table'>
+        <caption> GPN线路延迟计算器</caption>
+        <thead>
+            <tr class='success'>
+                <th>
+                    <p id="p1 ">目的节点</p>
+                    <p id="p2 ">源节点</p>
+                </th>
+                {% for dest in dest_name %}
+                <th> {{ dest }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for src in dest_name %}
+            <tr>
+                <td>{{ src }}</td>
+                {% for value in values.get(src)%}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("button").click(function () {
+            var src = $("#src").val();
+            var dest = $("#dest").val();
+
+            $.ajax({
+                url: '/gpncounter',
+                type: 'POST',
+                dataType: 'JSON',
+                cache: false,
+                data: {
+                    src: src,
+                    dest: dest
+                },
+                success: function (data) {
+                    $("#s_path").html(data.path);
+                    $("#s_length").html(data.length);
+                    // console.log(data);
+                },
+                error: function (err) {
+                    // console.log(err);
+                    alert("从源到目的节点，没有相应的路径");
+                }
+            });
+        });
+    });
+
+</script>
+
+</html>

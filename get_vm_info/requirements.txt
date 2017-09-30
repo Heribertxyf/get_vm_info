@@ -1,0 +1,9 @@
+Flask==0.12.2
+requests==2.18.1
+Logbook==1.1.0
+Flask-Script==2.0.5
+gunicorn==19.6.0
+networkx==1.11
+Flask-SQLAlchemy==2.2
+Flask-Admin==1.5.0
+MySQL-python==1.2.5

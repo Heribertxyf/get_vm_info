@@ -1,0 +1,22 @@
+<!-- 子类 -->
+
+{% extends 'showDB.html' %}
+
+{% block content %}
+<br>
+源地址：
+<output>{{source}}</output>
+<br>
+目的地址：
+<output>{{destination}}</output><br>
+<br>
+最短路径：
+<br>
+<output>{{shortest_way}}</output><br>
+<br>
+全部路径：<br>
+{% for e in range(num) %}
+<output>{{all_ways[e]}}</output><br>
+<output>总路径长度为：{{all_ways_lenth[e]}}</output><br>
+{% endfor %}
+{% endblock %}

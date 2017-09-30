@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="static/css/botstrap_example.min.css">
+    <title>最短路径查询</title>
+</head>
+
+<style>
+    .container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        align-items: center;
+        -webkit-align-items: center;
+        display: -webkit-flex;
+        justify-content: center;
+        -webkit-justify-content: center;
+    }
+</style>
+
+<body>
+    <form id="form1">
+      <fieldset>
+          源地址：
+          <select id="S">
+              {% for c in data[0][1:] %}
+              <option value="{{c}}">{{c}}</option>
+              {% endfor %}
+          </select>
+          to
+          目的地址：
+          <select id="D">
+              {% for c in data[0][1:] %}
+              <option value="{{c}}">{{c}}</option>
+              {% endfor %}
+          </select>
+          <button type="button" id="btn1">enter</button>
+          <p id="s_result"></p>
+          <p id="result_1"></p>
+          <p id="result_2"></p>
+      </fieldset>
+    </form><br>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">{% for row in data %}
+            <tr>{% for d in row %}
+                <td>{{ d }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+
+        <button onclick="/manage_db">manage</button>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function(){
+        $("#btn1").click(function(){
+            var data = {
+                "S" : $("#S").val(),
+                "D" : $("#D").val()
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/result',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    $("#s_result").text('最短路径为：' + data[0] + '  路径权值为：' + data[3])
+                    $("#result_1").text('次优路径为：' + data[1] + '  路径权值为：' + data[4])
+                    $("#result_2").text('第三路径为：' + data[2] + '  路径权值为：' + data[5])
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+    });
+</script>
+</html>
